@@ -1,0 +1,2440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahil Castle - Entry Gate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .dark {
+            background: linear-gradient(135deg, #000000, #111827, #1f2937);
+        }
+        
+        .castle-tap {
+            transition: transform 0.1s ease;
+            cursor: pointer;
+        }
+        
+        .castle-tap:active {
+            transform: scale(0.95);
+        }
+        
+        .coin-float {
+            animation: coinFloat 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        @keyframes coinFloat {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-60px); }
+        }
+        
+        .energy-bar {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            transition: width 0.3s ease;
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 1px solid #4b5563;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .upgrade-card {
+            background: linear-gradient(135deg, #111827, #1f2937);
+        }
+        
+        .upgrade-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .sa-coin {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://pfst.cf2.poecdn.net/base/image/2665579a543d3ca3e405b978c6575e4f51b0750520ad10ccd6bc707289130bfb?w=900&h=1500');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 10px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            border: 2px solid #fbbf24;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        
+        .sa-coin-large {
+            width: 40px;
+            height: 40px;
+            font-size: 12px;
+            border: 3px solid #fbbf24;
+        }
+        
+        .castle-glow {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .social-card {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border: 1px solid #475569;
+            transition: all 0.3s ease;
+        }
+        
+        .dark .social-card {
+            background: linear-gradient(135deg, #111827, #1f2937);
+        }
+        
+        .social-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+        
+        .reward-claimed {
+            background: linear-gradient(135deg, #059669, #047857) !important;
+        }
+
+        .castle-coin-frame {
+            position: relative;
+            background-image: url('https://pfst.cf2.poecdn.net/base/image/2665579a543d3ca3e405b978c6575e4f51b0750520ad10ccd6bc707289130bfb?w=900&h=1500');
+            background-size: cover;
+            background-position: center;
+            border: 3px solid #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6), inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .castle-coin-frame::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #fbbf24);
+            z-index: -1;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .castle-tap {
+                width: 200px !important;
+                height: 200px !important;
+            }
+            
+            .text-8xl {
+                font-size: 4rem !important;
+            }
+        }
+        
+        /* Input font size fix for mobile */
+        input, select {
+            font-size: 16px !important;
+        }
+        
+        /* Loading state */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Entry page styles */
+        .entry-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+        }
+
+        .social-task-card {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 2px solid #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .social-task-card.completed {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #064e3b, #065f46);
+        }
+
+        .social-task-card.pending {
+            border-color: #f59e0b;
+        }
+
+        .access-code-input {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 2px solid #4b5563;
+            color: #fff;
+            letter-spacing: 0.2em;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .access-code-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .floating-castle {
+            animation: floatCastle 3s ease-in-out infinite;
+        }
+
+        @keyframes floatCastle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .glow-border {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .store-item {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border: 2px solid #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .store-item:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+        }
+
+        .store-item.purchased {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #064e3b, #065f46);
+        }
+
+        .dollar-coin {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 10px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            border: 2px solid #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .admin-panel {
+            background: linear-gradient(135deg, #7c2d12, #991b1b);
+            border: 2px solid #dc2626;
+        }
+
+        .game-saving {
+            animation: savePulse 1s ease-in-out;
+        }
+
+        @keyframes savePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 dark:bg-gray-900 text-white">
+    <!-- Entry Page -->
+    <div id="entryPage" class="entry-page flex flex-col items-center justify-center p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="floating-castle w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-blue-700 rounded-3xl flex items-center justify-center shadow-2xl castle-glow">
+                <i class="fas fa-chess-rook text-6xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold gradient-text mb-2">Welcome to Sahil Castle</h1>
+            <p class="text-slate-400 dark:text-gray-400">Enter the realm of castle building</p>
+        </div>
+
+        <!-- Access Requirements -->
+        <div class="w-full max-w-md bg-slate-800 dark:bg-gray-800 rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-center">🔐 Access Requirements</h2>
+            <p class="text-sm text-slate-400 dark:text-gray-400 text-center mb-6">
+                To protect our kingdom, you must prove your loyalty by following all our royal channels.
+            </p>
+
+            <!-- Social Media Tasks -->
+            <div class="space-y-3 mb-6" id="socialTasks">
+                <div class="social-task-card rounded-lg p-3 pending" data-task="facebook">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-facebook text-blue-500 text-xl"></i>
+                            <div>
+                                <div class="font-semibold text-sm">Follow on Facebook</div>
+                                <div class="text-xs text-slate-400">Royal updates & news</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold" data-url="https://www.facebook.com/share/14FfTqnkdKu/">
+                            Follow
+                        </button>
+                    </div>
+                </div>
+
+                <div class="social-task-card rounded-lg p-3 pending" data-task="tiktok">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-tiktok text-pink-500 text-xl"></i>
+                            <div>
+                                <div class="font-semibold text-sm">Follow on TikTok</div>
+                                <div class="text-xs text-slate-400">Fun castle content</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded text-xs font-semibold" data-url="https://www.tiktok.com/@sahilasadi967?_r=1&_d=ed009bm57edcj2&sec_uid=MS4wLjABAAAAyYcyUtYYdKyA98cGcUU04NmOkw22wmULV6FIz8P01R6VfJqkyjZj04afcwiXRzPb&share_author_id=7341417295719433221&sharer_language=en&source=h5_m&u_code=ed00a164kiddl8&timestamp=1753538240&user_id=7341417295719433221&sec_user_id=MS4wLjABAAAAyYcyUtYYdKyA98cGcUU04NmOkw22wmULV6FIz8P01R6VfJqkyjZj04afcwiXRzPb&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7466942113089160977&share_link_id=5ba85bc1-4f86-401a-b7b0-150d3af1eec9&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b8727%2Cb0229&social_share_type=5&enable_checksum=1">
+                            Follow
+                        </button>
+                    </div>
+                </div>
+
+                <div class="social-task-card rounded-lg p-3 pending" data-task="youtube">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-youtube text-red-500 text-xl"></i>
+                            <div>
+                                <div class="font-semibold text-sm">Subscribe YouTube</div>
+                                <div class="text-xs text-slate-400">Gaming tutorials</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold" data-url="https://www.youtube.com/@SahilAsadi-v7g">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+
+                <div class="social-task-card rounded-lg p-3 pending" data-task="whatsapp">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+                            <div>
+                                <div class="font-semibold text-sm">Join WhatsApp</div>
+                                <div class="text-xs text-slate-400">Community group</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-semibold" data-url="https://chat.whatsapp.com/Hoh0Gx4DgLvH01f2mnrf6F?mode=ac_t">
+                            Join
+                        </button>
+                    </div>
+                </div>
+
+                <div class="social-task-card rounded-lg p-3 pending" data-task="telegram">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <i class="fab fa-telegram text-blue-400 text-xl"></i>
+                            <div>
+                                <div class="font-semibold text-sm">Join Telegram</div>
+                                <div class="text-xs text-slate-400">Royal announcements</div>
+                            </div>
+                        </div>
+                        <button class="follow-btn bg-blue-400 hover:bg-blue-500 text-white px-3 py-1 rounded text-xs font-semibold" data-url="https://t.me/sahilcastlegam">
+                            Join
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Status -->
+            <div class="text-center mb-4">
+                <div class="text-sm text-slate-400">Progress: <span id="completionCount">0</span>/5 completed</div>
+                <div class="w-full bg-slate-700 rounded-full h-2 mt-2">
+                    <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Access Code Section -->
+            <div id="codeSection" class="hidden">
+                <div class="bg-green-900 border border-green-500 rounded-lg p-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-check-circle text-green-400 text-2xl mb-2"></i>
+                        <div class="font-bold text-green-400">All Requirements Completed!</div>
+                        <div class="text-sm text-green-300 mt-1">Your access code is: <span class="font-mono font-bold">3847291650</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Input -->
+            <div>
+                <label class="block text-sm font-semibold mb-2">Enter Access Code:</label>
+                <input 
+                    type="text" 
+                    id="accessCodeInput" 
+                    class="access-code-input w-full p-3 rounded-lg focus:outline-none"
+                    placeholder="Enter 10-digit code"
+                    maxlength="10"
+                    pattern="[0-9]*"
+                    inputmode="numeric"
+                >
+                <button 
+                    id="enterGameBtn" 
+                    class="w-full mt-4 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                >
+                    <i class="fas fa-crown mr-2"></i>
+                    Enter Castle Kingdom
+                </button>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden mt-4 bg-red-900 border border-red-500 text-red-300 px-4 py-3 rounded-lg text-sm text-center">
+                Invalid access code. Please complete all social media tasks first.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-slate-500">
+            <p>© 2025 Sahil Castle Game. All rights reserved.</p>
+            <p class="mt-1">Join our community to unlock the kingdom!</p>
+        </div>
+    </div>
+
+    <!-- Registration Page (initially hidden) -->
+    <div id="registrationPage" class="hidden entry-page flex flex-col items-center justify-center p-6">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="floating-castle w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-purple-700 rounded-3xl flex items-center justify-center shadow-2xl castle-glow">
+                <i class="fas fa-user-plus text-6xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold gradient-text mb-2">Join the Kingdom</h1>
+            <p class="text-slate-400 dark:text-gray-400">Create your royal account to save your progress</p>
+        </div>
+
+        <!-- Login Option -->
+        <div class="w-full max-w-md mb-4">
+            <div class="text-center">
+                <button id="showLoginBtn" class="text-blue-400 hover:text-blue-300 text-sm underline mb-4">
+                    Already have an account? Login here
+                </button>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div id="registrationForm" class="w-full max-w-md bg-slate-800 dark:bg-gray-800 rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-center">🏰 Royal Registration</h2>
+            
+            <form id="regForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Royal Name *</label>
+                    <input 
+                        type="text" 
+                        id="regUsername" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your royal name"
+                        required
+                        maxlength="20"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Email Address *</label>
+                    <input 
+                        type="email" 
+                        id="regEmail" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Phone Number *</label>
+                    <input 
+                        type="tel" 
+                        id="regPhone" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your phone number"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Password *</label>
+                    <input 
+                        type="password" 
+                        id="regPassword" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Create a password"
+                        required
+                        minlength="6"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Age</label>
+                    <input 
+                        type="number" 
+                        id="regAge" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your age"
+                        min="13"
+                        max="100"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Country</label>
+                    <select 
+                        id="regCountry" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                    >
+                        <option value="">Select your country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="IN">India</option>
+                        <option value="PK">Pakistan</option>
+                        <option value="BD">Bangladesh</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Terms and Privacy -->
+                <div class="flex items-start space-x-3">
+                    <input 
+                        type="checkbox" 
+                        id="agreeTerms" 
+                        class="mt-1 w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500"
+                        required
+                    >
+                    <label for="agreeTerms" class="text-sm text-slate-400 dark:text-gray-400">
+                        I agree to the Terms of Service and Privacy Policy. I confirm that I am 13+ years old.
+                    </label>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="registerBtn" 
+                    class="w-full bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300"
+                >
+                    <i class="fas fa-crown mr-2"></i>
+                    Create Royal Account
+                </button>
+            </form>
+
+            <!-- Skip Option -->
+            <div class="mt-4 text-center">
+                <button 
+                    id="skipRegistration" 
+                    class="text-slate-400 hover:text-slate-300 text-sm underline"
+                >
+                    Skip registration (progress won't be saved)
+                </button>
+            </div>
+        </div>
+
+        <!-- Login Form (initially hidden) -->
+        <div id="loginForm" class="hidden w-full max-w-md bg-slate-800 dark:bg-gray-800 rounded-lg p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4 text-center">🔐 Royal Login</h2>
+            
+            <form id="loginFormEl" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base focus:outline-none focus:border-blue-500"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="loginBtn" 
+                    class="w-full bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300"
+                >
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Enter Kingdom
+                </button>
+            </form>
+
+            <!-- Back to Registration -->
+            <div class="mt-4 text-center">
+                <button 
+                    id="showRegBtn" 
+                    class="text-slate-400 hover:text-slate-300 text-sm underline"
+                >
+                    Don't have an account? Register here
+                </button>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="w-full max-w-md">
+            <h3 class="text-lg font-bold mb-3 text-center">Royal Benefits</h3>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <i class="fas fa-save text-blue-400 text-xl mb-2"></i>
+                    <div>Save Progress</div>
+                </div>
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <i class="fas fa-trophy text-yellow-400 text-xl mb-2"></i>
+                    <div>Leaderboard</div>
+                </div>
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <i class="fas fa-gift text-green-400 text-xl mb-2"></i>
+                    <div>Exclusive Rewards</div>
+                </div>
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-3 text-center">
+                    <i class="fas fa-store text-purple-400 text-xl mb-2"></i>
+                    <div>Sahil Store Access</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Content (initially hidden) -->
+    <div id="gameContent" class="hidden">
+        <!-- Header -->
+        <div class="bg-slate-800 dark:bg-gray-800 border-b border-slate-700 dark:border-gray-700 p-4 sticky top-0 z-40">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center castle-glow">
+                        <i class="fas fa-chess-rook text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold gradient-text">Sahil Castle</h1>
+                        <p class="text-xs text-slate-400 dark:text-gray-400">Tap to build your empire</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <div class="flex items-center space-x-1">
+                            <div class="sa-coin castle-coin-frame">SA</div>
+                            <span class="font-bold text-lg" id="coinCount">0</span>
+                        </div>
+                        <div class="text-xs text-slate-400 dark:text-gray-400">SA Coins</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="flex items-center space-x-1">
+                            <i class="fas fa-bolt text-blue-400"></i>
+                            <span class="font-bold" id="energyCount">1000</span>
+                            <span class="text-slate-400 dark:text-gray-400">/</span>
+                            <span class="text-slate-400 dark:text-gray-400" id="maxEnergy">1000</span>
+                        </div>
+                        <div class="text-xs text-slate-400 dark:text-gray-400">Energy</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Energy Bar -->
+            <div class="mt-3">
+                <div class="w-full bg-slate-700 dark:bg-gray-700 rounded-full h-2">
+                    <div class="energy-bar h-2 rounded-full" id="energyBar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="pb-20">
+            <!-- Tap Section -->
+            <div id="tapSection" class="p-6 text-center">
+                <div class="mb-6">
+                    <div class="text-sm text-slate-400 dark:text-gray-400 mb-2">Castle Level</div>
+                    <div class="text-2xl font-bold gradient-text" id="playerLevel">Village</div>
+                </div>
+                
+                <!-- Castle -->
+                <div class="relative mb-8 flex justify-center">
+                    <div class="castle-tap w-64 h-64 md:w-80 md:h-80 relative" id="castleTap">
+                        <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-2xl castle-glow">
+                            <i class="fas fa-chess-rook text-6xl md:text-8xl text-white"></i>
+                        </div>
+                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent to-white opacity-20"></div>
+                        <div class="absolute -top-2 -right-2 w-12 h-12 castle-coin-frame flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">SA</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tap Power -->
+                <div class="mb-6">
+                    <div class="text-sm text-slate-400 dark:text-gray-400">Tap Power</div>
+                    <div class="text-xl font-bold flex items-center justify-center space-x-2">
+                        <span>+</span>
+                        <div class="sa-coin castle-coin-frame">SA</div>
+                        <span id="tapPower">1</span>
+                        <span>per tap</span>
+                    </div>
+                </div>
+                
+                <!-- Coins per Hour -->
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 mx-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-chart-line text-green-400"></i>
+                            <span class="text-sm">SA Coins per hour</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <div class="sa-coin castle-coin-frame">SA</div>
+                            <span class="font-bold" id="coinsPerHour">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upgrades Section -->
+            <div id="upgradesSection" class="hidden p-4">
+                <h2 class="text-xl font-bold mb-4">Castle Upgrades</h2>
+                
+                <div class="grid grid-cols-1 gap-4" id="upgradesList">
+                    <!-- Upgrades will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Sahil Store Section -->
+            <div id="storeSection" class="hidden p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">🏪 Sahil Store</h2>
+                    <button id="adminBtn" class="text-red-400 hover:text-red-300 text-sm">
+                        <i class="fas fa-cog"></i> Admin
+                    </button>
+                </div>
+                <p class="text-slate-400 dark:text-gray-400 text-sm mb-6">Premium WhatsApp groups with exclusive content and support!</p>
+                
+                <!-- Admin Panel (hidden by default) -->
+                <div id="adminPanel" class="hidden admin-panel rounded-lg p-4 mb-6">
+                    <h3 class="text-lg font-bold mb-4 text-red-300">🔒 Admin Panel</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Admin Password</label>
+                            <input 
+                                type="password" 
+                                id="adminPassword" 
+                                class="w-full p-3 bg-slate-700 rounded-lg border border-red-500 text-white text-base"
+                                placeholder="Enter admin password"
+                            >
+                        </div>
+                        <button id="verifyAdminBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+                            Verify Access
+                        </button>
+                    </div>
+                    
+                    <!-- Add Item Form (hidden until password verified) -->
+                    <div id="addItemForm" class="hidden mt-6 border-t border-red-500 pt-4">
+                        <h4 class="font-bold mb-4 text-red-300">Add New Store Item</h4>
+                        <div class="space-y-3">
+                            <input type="text" id="itemName" placeholder="Item Name" class="w-full p-2 bg-slate-700 rounded text-white text-base">
+                            <textarea id="itemDescription" placeholder="Item Description" class="w-full p-2 bg-slate-700 rounded text-white text-base" rows="2"></textarea>
+                            <input type="number" id="itemPrice" placeholder="Price in USD" class="w-full p-2 bg-slate-700 rounded text-white text-base">
+                            <input type="url" id="itemUrl" placeholder="WhatsApp Group URL" class="w-full p-2 bg-slate-700 rounded text-white text-base">
+                            <select id="itemIcon" class="w-full p-2 bg-slate-700 rounded text-white text-base">
+                                <option value="fab fa-whatsapp">WhatsApp</option>
+                                <option value="fas fa-star">Premium</option>
+                                <option value="fas fa-crown">VIP</option>
+                                <option value="fas fa-gem">Exclusive</option>
+                            </select>
+                            <button id="addItemBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+                                Add Item to Store
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4" id="storeList">
+                    <!-- Store items will be populated by JavaScript -->
+                </div>
+                
+                <!-- Store Info -->
+                <div class="mt-6 bg-slate-800 dark:bg-gray-800 rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2">💎 Premium Benefits</h3>
+                    <ul class="text-sm text-slate-400 space-y-1">
+                        <li>• Exclusive trading strategies</li>
+                        <li>• Direct access to Sahil Asadi</li>
+                        <li>• Premium market analysis</li>
+                        <li>• Early access to new features</li>
+                        <li>• VIP community support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Social Section -->
+            <div id="socialSection" class="hidden p-4">
+                <h2 class="text-xl font-bold mb-4">Follow & Earn</h2>
+                <p class="text-slate-400 dark:text-gray-400 text-sm mb-6">Follow our social media accounts to earn bonus SA coins!</p>
+                
+                <div class="space-y-4" id="socialList">
+                    <!-- Social media tasks will be populated by JavaScript -->
+                </div>
+                
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-4">Daily Tasks</h3>
+                    <div class="space-y-4" id="tasksList">
+                        <!-- Tasks will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div id="statsSection" class="hidden p-4">
+                <h2 class="text-xl font-bold mb-4">Castle Statistics</h2>
+                
+                <!-- User Info -->
+                <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg" id="playerUsername">Player</div>
+                                <div class="text-sm text-slate-400 dark:text-gray-400" id="playerRank">Rank: Loading...</div>
+                            </div>
+                        </div>
+                        <button onclick="game.changeUsername()" class="text-blue-400 hover:text-blue-300 text-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold gradient-text" id="totalUsers">0</div>
+                        <div class="text-sm text-slate-400 dark:text-gray-400">Total Players</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text" id="totalTaps">0</div>
+                        <div class="text-sm text-slate-400 dark:text-gray-400">Total Taps</div>
+                    </div>
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 text-center">
+                        <div class="flex items-center justify-center space-x-1">
+                            <div class="sa-coin castle-coin-frame">SA</div>
+                            <div class="text-2xl font-bold gradient-text" id="totalCoins">0</div>
+                        </div>
+                        <div class="text-sm text-slate-400 dark:text-gray-400">Total SA Coins</div>
+                    </div>
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text" id="playTime">0h 0m</div>
+                        <div class="text-sm text-slate-400 dark:text-gray-400">Build Time</div>
+                    </div>
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text" id="upgradesPurchased">0</div>
+                        <div class="text-sm text-slate-400 dark:text-gray-400">Upgrades</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div id="leaderboardSection" class="hidden p-4">
+                <h2 class="text-xl font-bold mb-4">Leaderboard</h2>
+                <p class="text-slate-400 dark:text-gray-400 text-sm mb-6">See how you rank against other castle builders!</p>
+                
+                <div class="space-y-3" id="leaderboardList">
+                    <!-- Leaderboard will be populated by JavaScript -->
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <div class="text-sm text-slate-400 dark:text-gray-400">Updates automatically as you play</div>
+                    <div class="flex items-center justify-center space-x-2 mt-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-slate-500 dark:text-gray-500 transition-opacity duration-300" id="saveIndicator">Game Auto-Saved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 bg-slate-800 dark:bg-gray-800 border-t border-slate-700 dark:border-gray-700">
+            <div class="grid grid-cols-6 p-2">
+                <button class="tab-button active p-3 rounded-lg text-center" data-tab="tap">
+                    <i class="fas fa-chess-rook text-xl mb-1"></i>
+                    <div class="text-xs">Castle</div>
+                </button>
+                <button class="tab-button p-3 rounded-lg text-center" data-tab="upgrades">
+                    <i class="fas fa-arrow-up text-xl mb-1"></i>
+                    <div class="text-xs">Upgrades</div>
+                </button>
+                <button class="tab-button p-3 rounded-lg text-center" data-tab="store">
+                    <i class="fas fa-store text-xl mb-1"></i>
+                    <div class="text-xs">Store</div>
+                </button>
+                <button class="tab-button p-3 rounded-lg text-center" data-tab="social">
+                    <i class="fas fa-users text-xl mb-1"></i>
+                    <div class="text-xs">Social</div>
+                </button>
+                <button class="tab-button p-3 rounded-lg text-center" data-tab="stats">
+                    <i class="fas fa-chart-bar text-xl mb-1"></i>
+                    <div class="text-xs">Stats</div>
+                </button>
+                <button class="tab-button p-3 rounded-lg text-center" data-tab="leaderboard">
+                    <i class="fas fa-trophy text-xl mb-1"></i>
+                    <div class="text-xs">Ranking</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Global Data Storage System
+        class GlobalDataStorage {
+            constructor() {
+                this.adminPassword = 'sahilwardak068175A';
+                this.users = this.loadGlobalUsers();
+                this.storeItems = this.loadGlobalStoreItems();
+                this.initializeDefaultStore();
+            }
+
+            loadGlobalUsers() {
+                try {
+                    const data = this.getCookie('sahilCastleGlobalUsers');
+                    return data ? JSON.parse(decodeURIComponent(data)) : {};
+                } catch (error) {
+                    console.error('Error loading global users:', error);
+                    return {};
+                }
+            }
+
+            saveGlobalUsers() {
+                try {
+                    const data = JSON.stringify(this.users);
+                    this.setCookie('sahilCastleGlobalUsers', encodeURIComponent(data), 365);
+                } catch (error) {
+                    console.error('Error saving global users:', error);
+                }
+            }
+
+            loadGlobalStoreItems() {
+                try {
+                    const data = this.getCookie('sahilCastleGlobalStore');
+                    return data ? JSON.parse(decodeURIComponent(data)) : [];
+                } catch (error) {
+                    console.error('Error loading global store:', error);
+                    return [];
+                }
+            }
+
+            saveGlobalStoreItems() {
+                try {
+                    const data = JSON.stringify(this.storeItems);
+                    this.setCookie('sahilCastleGlobalStore', encodeURIComponent(data), 365);
+                } catch (error) {
+                    console.error('Error saving global store:', error);
+                }
+            }
+
+            initializeDefaultStore() {
+                if (this.storeItems.length === 0) {
+                    this.storeItems = [
+                        {
+                            id: 'premium_group_1',
+                            name: 'Premium Trading Group',
+                            description: 'Exclusive trading signals and market analysis',
+                            price: 1.00,
+                            icon: 'fab fa-whatsapp',
+                            url: 'https://chat.whatsapp.com/IlmW8f3on1MKn9nyQeTOoP?mode=ac_t'
+                        },
+                        {
+                            id: 'vip_support_group',
+                            name: 'VIP Support Group',
+                            description: 'Direct access to Sahil Asadi and premium support',
+                            price: 1.00,
+                            icon: 'fab fa-whatsapp',
+                            url: 'https://chat.whatsapp.com/HMadFk61LO4DNfWO2HvsOr?mode=ac_t'
+                        }
+                    ];
+                    this.saveGlobalStoreItems();
+                }
+            }
+
+            registerUser(userData) {
+                const userId = 'user-' + Math.random().toString(36).substr(2, 9);
+                const userKey = userData.email.toLowerCase();
+                
+                this.users[userKey] = {
+                    ...userData,
+                    userId: userId,
+                    registrationDate: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+                
+                this.saveGlobalUsers();
+                return this.users[userKey];
+            }
+
+            authenticateUser(email, password) {
+                const userKey = email.toLowerCase();
+                const user = this.users[userKey];
+                
+                if (user && user.password === password) {
+                    user.lastLogin = new Date().toISOString();
+                    this.saveGlobalUsers();
+                    return user;
+                }
+                return null;
+            }
+
+            userExists(email) {
+                return !!this.users[email.toLowerCase()];
+            }
+
+            addStoreItem(item) {
+                const newItem = {
+                    ...item,
+                    id: 'custom-' + Math.random().toString(36).substr(2, 9)
+                };
+                this.storeItems.push(newItem);
+                this.saveGlobalStoreItems();
+                return newItem;
+            }
+
+            setCookie(name, value, days) {
+                try {
+                    const expires = new Date();
+                    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+                    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+                } catch (error) {
+                    console.error('Error setting cookie:', error);
+                }
+            }
+
+            getCookie(name) {
+                try {
+                    const nameEQ = name + "=";
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i];
+                        while (cookie.charAt(0) === ' ') {
+                            cookie = cookie.substring(1, cookie.length);
+                        }
+                        if (cookie.indexOf(nameEQ) === 0) {
+                            return cookie.substring(nameEQ.length, cookie.length);
+                        }
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('Error getting cookie:', error);
+                    return null;
+                }
+            }
+        }
+
+        // Initialize global data storage
+        window.globalStorage = new GlobalDataStorage();
+
+        // Entry Gate System
+        class EntryGate {
+            constructor() {
+                this.correctCode = '3847291650';
+                this.completedTasks = new Set();
+                this.setupEventListeners();
+                this.updateProgress();
+            }
+
+            setupEventListeners() {
+                // Follow buttons
+                document.querySelectorAll('.follow-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const url = e.target.getAttribute('data-url');
+                        const task = e.target.closest('[data-task]').getAttribute('data-task');
+                        this.handleSocialFollow(url, task);
+                    });
+                });
+
+                // Access code input
+                const codeInput = document.getElementById('accessCodeInput');
+                const enterBtn = document.getElementById('enterGameBtn');
+
+                codeInput.addEventListener('input', (e) => {
+                    // Only allow numbers
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    
+                    // Enable/disable enter button
+                    if (e.target.value.length === 10) {
+                        enterBtn.disabled = false;
+                        enterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        enterBtn.classList.add('glow-border');
+                    } else {
+                        enterBtn.disabled = true;
+                        enterBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        enterBtn.classList.remove('glow-border');
+                    }
+                });
+
+                // Enter game button
+                enterBtn.addEventListener('click', () => {
+                    this.verifyAccessCode();
+                });
+
+                // Enter key support
+                codeInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !enterBtn.disabled) {
+                        this.verifyAccessCode();
+                    }
+                });
+            }
+
+            handleSocialFollow(url, task) {
+                // Open social media link
+                window.open(url, '_blank');
+
+                // Mark task as completed after a short delay
+                setTimeout(() => {
+                    this.completedTasks.add(task);
+                    this.markTaskCompleted(task);
+                    this.updateProgress();
+                    
+                    // Show completion feedback
+                    this.showTaskCompletionFeedback(task);
+                }, 2000);
+            }
+
+            markTaskCompleted(task) {
+                const taskCard = document.querySelector(`[data-task="${task}"]`);
+                if (taskCard) {
+                    taskCard.classList.remove('pending');
+                    taskCard.classList.add('completed');
+                    
+                    const followBtn = taskCard.querySelector('.follow-btn');
+                    followBtn.innerHTML = '<i class="fas fa-check"></i> Completed';
+                    followBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600', 'bg-pink-500', 'hover:bg-pink-600', 'bg-red-500', 'hover:bg-red-600', 'bg-green-500', 'hover:bg-green-600', 'bg-blue-400', 'hover:bg-blue-500');
+                    followBtn.classList.add('bg-green-600', 'cursor-default');
+                    followBtn.disabled = true;
+                }
+            }
+
+            showTaskCompletionFeedback(task) {
+                const taskCard = document.querySelector(`[data-task="${task}"]`);
+                if (taskCard) {
+                    // Add a temporary glow effect
+                    taskCard.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.6)';
+                    setTimeout(() => {
+                        taskCard.style.boxShadow = '';
+                    }, 1500);
+                }
+            }
+
+            updateProgress() {
+                const completionCount = document.getElementById('completionCount');
+                const progressBar = document.getElementById('progressBar');
+                const codeSection = document.getElementById('codeSection');
+
+                const completed = this.completedTasks.size;
+                const total = 5;
+                const percentage = (completed / total) * 100;
+
+                completionCount.textContent = completed;
+                progressBar.style.width = percentage + '%';
+
+                // Show code section when all tasks are completed
+                if (completed === total) {
+                    codeSection.classList.remove('hidden');
+                    this.showAllTasksCompletedAnimation();
+                }
+            }
+
+            showAllTasksCompletedAnimation() {
+                // Create celebration effect
+                const celebration = document.createElement('div');
+                celebration.className = 'fixed inset-0 pointer-events-none z-50 flex items-center justify-center';
+                celebration.innerHTML = `
+                    <div class="text-6xl animate-bounce">
+                        🎉
+                    </div>
+                `;
+                document.body.appendChild(celebration);
+
+                setTimeout(() => {
+                    if (celebration.parentNode) {
+                        celebration.parentNode.removeChild(celebration);
+                    }
+                }, 2000);
+            }
+
+            verifyAccessCode() {
+                const codeInput = document.getElementById('accessCodeInput');
+                const errorMessage = document.getElementById('errorMessage');
+                const enteredCode = codeInput.value.trim();
+
+                if (enteredCode === this.correctCode && this.completedTasks.size === 5) {
+                    this.proceedToRegistration();
+                } else {
+                    this.showError();
+                }
+            }
+
+            showError() {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.classList.remove('hidden');
+                errorMessage.style.animation = 'none';
+                setTimeout(() => {
+                    errorMessage.style.animation = 'pulse 0.5s ease-in-out 3';
+                }, 10);
+
+                setTimeout(() => {
+                    errorMessage.classList.add('hidden');
+                }, 3000);
+            }
+
+            proceedToRegistration() {
+                // Hide entry page and show registration
+                const entryPage = document.getElementById('entryPage');
+                const registrationPage = document.getElementById('registrationPage');
+
+                entryPage.style.transition = 'opacity 0.5s ease-out';
+                entryPage.style.opacity = '0';
+
+                setTimeout(() => {
+                    entryPage.classList.add('hidden');
+                    registrationPage.classList.remove('hidden');
+                    
+                    // Initialize registration system
+                    window.registrationSystem = new RegistrationSystem();
+                }, 500);
+            }
+        }
+
+        // Registration System (Enhanced)
+        class RegistrationSystem {
+            constructor() {
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                const regForm = document.getElementById('regForm');
+                const loginForm = document.getElementById('loginFormEl');
+                const skipBtn = document.getElementById('skipRegistration');
+                const showLoginBtn = document.getElementById('showLoginBtn');
+                const showRegBtn = document.getElementById('showRegBtn');
+
+                regForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegistration();
+                });
+
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                skipBtn.addEventListener('click', () => {
+                    this.skipRegistration();
+                });
+
+                showLoginBtn.addEventListener('click', () => {
+                    this.showLoginForm();
+                });
+
+                showRegBtn.addEventListener('click', () => {
+                    this.showRegistrationForm();
+                });
+            }
+
+            showLoginForm() {
+                document.getElementById('registrationForm').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+            }
+
+            showRegistrationForm() {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registrationForm').classList.remove('hidden');
+            }
+
+            handleRegistration() {
+                const formData = {
+                    username: document.getElementById('regUsername').value.trim(),
+                    email: document.getElementById('regEmail').value.trim(),
+                    phone: document.getElementById('regPhone').value.trim(),
+                    password: document.getElementById('regPassword').value,
+                    age: document.getElementById('regAge').value,
+                    country: document.getElementById('regCountry').value
+                };
+
+                // Validate required fields
+                if (!formData.username || !formData.email || !formData.phone || !formData.password) {
+                    this.showError('Please fill in all required fields.');
+                    return;
+                }
+
+                // Check if user already exists
+                if (window.globalStorage.userExists(formData.email)) {
+                    this.showError('An account with this email already exists. Please login instead.');
+                    return;
+                }
+
+                // Register user
+                const registeredUser = window.globalStorage.registerUser(formData);
+                this.enterGame(registeredUser);
+            }
+
+            handleLogin() {
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                if (!email || !password) {
+                    this.showError('Please enter both email and password.');
+                    return;
+                }
+
+                const user = window.globalStorage.authenticateUser(email, password);
+                if (user) {
+                    this.enterGame(user);
+                } else {
+                    this.showError('Invalid email or password. Please try again.');
+                }
+            }
+
+            skipRegistration() {
+                const guestData = {
+                    username: 'Guest Player',
+                    userId: 'guest-' + Math.random().toString(36).substr(2, 9),
+                    isGuest: true,
+                    registrationDate: new Date().toISOString()
+                };
+
+                this.enterGame(guestData);
+            }
+
+            showError(message) {
+                const activeForm = document.getElementById('registrationForm').classList.contains('hidden') ? 
+                    document.getElementById('loginForm') : document.getElementById('registrationForm');
+                
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'mt-4 bg-red-900 border border-red-500 text-red-300 px-4 py-3 rounded-lg text-sm text-center';
+                errorDiv.textContent = message;
+
+                const existingError = activeForm.querySelector('.bg-red-900');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                activeForm.appendChild(errorDiv);
+
+                setTimeout(() => {
+                    if (errorDiv.parentNode) {
+                        errorDiv.parentNode.removeChild(errorDiv);
+                    }
+                }, 5000);
+            }
+
+            enterGame(userData) {
+                // Hide registration page and show game
+                const registrationPage = document.getElementById('registrationPage');
+                const gameContent = document.getElementById('gameContent');
+
+                registrationPage.style.transition = 'opacity 0.5s ease-out';
+                registrationPage.style.opacity = '0';
+
+                setTimeout(() => {
+                    registrationPage.classList.add('hidden');
+                    gameContent.classList.remove('hidden');
+                    
+                    // Initialize the main game with user data
+                    window.game = new SahilCastle(userData);
+                    
+                    // Show welcome message
+                    setTimeout(() => {
+                        if (window.game && window.game.showSaveIndicator) {
+                            const welcomeMsg = userData.isGuest ? 
+                                'Welcome Guest! Register to save progress 🏰' : 
+                                `Welcome back ${userData.username}! 🏰`;
+                            window.game.showSaveIndicator(welcomeMsg);
+                        }
+                    }, 500);
+                }, 500);
+            }
+        }
+
+        // Sahil Castle Game Class (Enhanced with full save/load system)
+        class SahilCastle {
+            constructor(userData = null) {
+                try {
+                    // Store user data
+                    this.userData = userData || {
+                        username: 'Guest Player',
+                        userId: 'guest-' + Math.random().toString(36).substr(2, 9),
+                        isGuest: true
+                    };
+                    
+                    // Initialize game data with proper defaults
+                    this.gameData = {
+                        coins: 0,
+                        energy: 1000,
+                        maxEnergy: 1000,
+                        tapPower: 1,
+                        coinsPerHour: 0,
+                        totalTaps: 0,
+                        totalCoins: 0,
+                        startTime: Date.now(),
+                        upgradesPurchased: 0,
+                        lastEnergyUpdate: Date.now(),
+                        upgrades: {},
+                        completedTasks: [],
+                        socialFollows: [],
+                        lastSaveTime: Date.now(),
+                        storePurchases: [],
+                        userId: this.userData.userId,
+                        username: this.userData.username
+                    };
+                    
+                    // Load saved data for registered users
+                    if (!this.userData.isGuest) {
+                        this.loadGameData();
+                    }
+                    this.handleOfflineProgress();
+                    
+                    this.levels = [
+                        { name: 'Village', min: 0, max: 4999 },
+                        { name: 'Town', min: 5000, max: 24999 },
+                        { name: 'City', min: 25000, max: 99999 },
+                        { name: 'Kingdom', min: 100000, max: 999999 },
+                        { name: 'Empire', min: 1000000, max: Infinity }
+                    ];
+                    
+                    this.upgradeTypes = [
+                        {
+                            id: 'tap_power',
+                            name: 'Royal Hammer',
+                            description: 'Increase SA coins per tap',
+                            icon: 'fas fa-hammer',
+                            baseCost: 100,
+                            baseIncrease: 1,
+                            level: this.gameData.upgrades.tap_power || 0
+                        },
+                        {
+                            id: 'energy_limit',
+                            name: 'Castle Reserves',
+                            description: 'Increase maximum energy',
+                            icon: 'fas fa-battery-full',
+                            baseCost: 500,
+                            baseIncrease: 100,
+                            level: this.gameData.upgrades.energy_limit || 0
+                        },
+                        {
+                            id: 'energy_regen',
+                            name: 'Magic Well',
+                            description: 'Faster energy regeneration',
+                            icon: 'fas fa-magic',
+                            baseCost: 1000,
+                            baseIncrease: 1,
+                            level: this.gameData.upgrades.energy_regen || 0
+                        },
+                        {
+                            id: 'auto_miner',
+                            name: 'Royal Miners',
+                            description: 'Generate SA coins automatically',
+                            icon: 'fas fa-pickaxe',
+                            baseCost: 2000,
+                            baseIncrease: 10,
+                            level: this.gameData.upgrades.auto_miner || 0
+                        }
+                    ];
+                    
+                    this.socialTasks = [
+                        {
+                            id: 'follow_tiktok',
+                            name: 'Follow on TikTok',
+                            description: 'Follow @sahilasadi967 for updates',
+                            reward: 5000,
+                            icon: 'fab fa-tiktok',
+                            url: 'https://www.tiktok.com/@sahilasadi967?_t=ZS-8yHl3RYl6tL&_r=1'
+                        },
+                        {
+                            id: 'join_telegram',
+                            name: 'Join Telegram',
+                            description: 'Join our Telegram community',
+                            reward: 3000,
+                            icon: 'fab fa-telegram',
+                            url: 'https://t.me/Sahilcastlegam'
+                        },
+                        {
+                            id: 'follow_youtube',
+                            name: 'Subscribe YouTube',
+                            description: 'Subscribe to our channel',
+                            reward: 7000,
+                            icon: 'fab fa-youtube',
+                            url: 'https://www.youtube.com/@SahilAsadi-v7g'
+                        },
+                        {
+                            id: 'follow_facebook',
+                            name: 'Follow on Facebook',
+                            description: 'Follow Sahil Asadi on Facebook',
+                            reward: 4000,
+                            icon: 'fab fa-facebook',
+                            url: 'https://www.facebook.com/share/1RfCAesj6g/'
+                        },
+                        {
+                            id: 'join_whatsapp',
+                            name: 'Join WhatsApp Group',
+                            description: 'Join our WhatsApp community group',
+                            reward: 6000,
+                            icon: 'fab fa-whatsapp',
+                            url: 'https://chat.whatsapp.com/Hoh0Gx4DgLvH01f2mnrf6F?mode=ac_t'
+                        }
+                    ];
+                    
+                    this.dailyTasks = [
+                        {
+                            id: 'daily_tap_100',
+                            name: 'Tap 100 times',
+                            description: 'Tap the castle 100 times today',
+                            reward: 1000,
+                            progress: 0,
+                            target: 100
+                        },
+                        {
+                            id: 'daily_energy_full',
+                            name: 'Use full energy',
+                            description: 'Spend all your energy today',
+                            reward: 2000,
+                            progress: 0,
+                            target: 1
+                        }
+                    ];
+                    
+                    // Initialize the game
+                    this.init();
+                } catch (error) {
+                    console.error('Game initialization error:', error);
+                    // Fallback initialization
+                    this.userData = { username: 'Player', userId: 'player-default', isGuest: true };
+                    this.gameData = {
+                        coins: 0,
+                        energy: 1000,
+                        maxEnergy: 1000,
+                        tapPower: 1,
+                        coinsPerHour: 0,
+                        totalTaps: 0,
+                        totalCoins: 0,
+                        startTime: Date.now(),
+                        upgradesPurchased: 0,
+                        lastEnergyUpdate: Date.now(),
+                        upgrades: {},
+                        completedTasks: [],
+                        socialFollows: [],
+                        storePurchases: [],
+                        lastSaveTime: Date.now(),
+                        userId: this.userData.userId,
+                        username: this.userData.username
+                    };
+                    this.init();
+                }
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.setupAdminPanel();
+                this.updateUI();
+                this.startGameLoop();
+                this.generateUpgrades();
+                this.generateSocialTasks();
+                this.generateStoreItems();
+                this.updateLeaderboard();
+                this.showSaveIndicator('Game Loaded');
+            }
+
+            setupAdminPanel() {
+                const adminBtn = document.getElementById('adminBtn');
+                const adminPanel = document.getElementById('adminPanel');
+                const verifyBtn = document.getElementById('verifyAdminBtn');
+                const addItemBtn = document.getElementById('addItemBtn');
+
+                adminBtn.addEventListener('click', () => {
+                    adminPanel.classList.toggle('hidden');
+                });
+
+                verifyBtn.addEventListener('click', () => {
+                    const password = document.getElementById('adminPassword').value;
+                    if (password === window.globalStorage.adminPassword) {
+                        document.getElementById('addItemForm').classList.remove('hidden');
+                        this.showSaveIndicator('Admin access granted');
+                    } else {
+                        this.showSaveIndicator('Invalid admin password');
+                    }
+                });
+
+                addItemBtn.addEventListener('click', () => {
+                    this.addAdminStoreItem();
+                });
+            }
+
+            addAdminStoreItem() {
+                const name = document.getElementById('itemName').value.trim();
+                const description = document.getElementById('itemDescription').value.trim();
+                const price = parseFloat(document.getElementById('itemPrice').value);
+                const url = document.getElementById('itemUrl').value.trim();
+                const icon = document.getElementById('itemIcon').value;
+
+                if (!name || !description || !price || !url) {
+                    this.showSaveIndicator('Please fill all fields');
+                    return;
+                }
+
+                const newItem = {
+                    name: name,
+                    description: description,
+                    price: price,
+                    url: url,
+                    icon: icon
+                };
+
+                window.globalStorage.addStoreItem(newItem);
+                this.generateStoreItems();
+                this.showSaveIndicator('Store item added successfully!');
+
+                // Clear form
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemDescription').value = '';
+                document.getElementById('itemPrice').value = '';
+                document.getElementById('itemUrl').value = '';
+                document.getElementById('itemIcon').value = 'fab fa-whatsapp';
+            }
+            
+            setupEventListeners() {
+                // Castle tap
+                const castleTap = document.getElementById('castleTap');
+                if (castleTap) {
+                    castleTap.addEventListener('click', (e) => this.handleTap(e));
+                    castleTap.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.handleTap(e);
+                    });
+                }
+                
+                // Tab navigation
+                const tabButtons = document.querySelectorAll('.tab-button');
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const tab = button.getAttribute('data-tab');
+                        this.switchTab(tab);
+                    });
+                });
+            }
+
+            generateStoreItems() {
+                const storeList = document.getElementById('storeList');
+                if (!storeList) return;
+                
+                storeList.innerHTML = '';
+                
+                window.globalStorage.storeItems.forEach(item => {
+                    const isPurchased = this.gameData.storePurchases.includes(item.id);
+                    
+                    const storeCard = document.createElement('div');
+                    storeCard.className = `store-item rounded-lg p-4 ${isPurchased ? 'purchased' : 'cursor-pointer'}`;
+                    storeCard.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center">
+                                    <i class="${item.icon} text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">${item.name}</h3>
+                                    <p class="text-sm text-slate-400 dark:text-gray-400">${item.description}</p>
+                                    ${isPurchased ? '<div class="text-xs text-green-400 font-semibold">✓ Purchased</div>' : ''}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                ${isPurchased ? 
+                                    '<button class="bg-green-600 text-white px-4 py-2 rounded text-sm font-semibold" onclick="window.open(\'' + item.url + '\', \'_blank\')">Join Group</button>' :
+                                    `<div class="mb-2">
+                                        <div class="flex items-center space-x-1 font-bold text-green-400">
+                                            <span>$${item.price.toFixed(2)}</span>
+                                        </div>
+                                        <div class="text-xs text-slate-400 dark:text-gray-400">Real Money</div>
+                                    </div>
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold" onclick="game.purchaseStoreItem('${item.id}')">
+                                        Purchase
+                                    </button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                    
+                    storeList.appendChild(storeCard);
+                });
+            }
+
+            purchaseStoreItem(itemId) {
+                const item = window.globalStorage.storeItems.find(i => i.id === itemId);
+                if (!item || this.gameData.storePurchases.includes(itemId)) {
+                    return;
+                }
+
+                // Show payment modal
+                this.showPaymentModal(item);
+            }
+
+            showPaymentModal(item) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="${item.icon} text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">${item.name}</h3>
+                            <p class="text-slate-400 mb-4">${item.description}</p>
+                            <div class="text-2xl font-bold text-green-400 mb-4">$${item.price.toFixed(2)} USD</div>
+                            <p class="text-sm text-slate-500 mb-6">This is a simulated purchase. In a real implementation, you would integrate with payment processors like Stripe, PayPal, etc.</p>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 bg-gray-600 text-white hover:bg-gray-700 rounded py-2 px-4" onclick="this.closest('.fixed').remove()">
+                                    Cancel
+                                </button>
+                                <button class="flex-1 bg-green-500 text-white hover:bg-green-600 rounded py-2 px-4" onclick="game.simulatePurchase('${item.id}'); this.closest('.fixed').remove()">
+                                    Simulate Purchase
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+
+            simulatePurchase(itemId) {
+                const item = window.globalStorage.storeItems.find(i => i.id === itemId);
+                if (!item) return;
+
+                // Mark as purchased
+                this.gameData.storePurchases.push(itemId);
+
+                // Open the WhatsApp group
+                window.open(item.url, '_blank');
+
+                // Update UI
+                this.generateStoreItems();
+                this.saveGameData();
+
+                this.showSaveIndicator(`${item.name} purchased! Check your new WhatsApp group.`);
+
+                // Show purchase success modal
+                this.showPurchaseSuccessModal(item);
+            }
+
+            showPurchaseSuccessModal(item) {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-check text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">Purchase Successful! 🎉</h3>
+                            <p class="text-slate-400 mb-4">You have successfully joined the <strong>${item.name}</strong>!</p>
+                            <p class="text-sm text-slate-500 mb-4">The WhatsApp group should have opened in a new tab. If not, you can access it anytime from the store.</p>
+                            <button class="w-full bg-blue-500 text-white hover:bg-blue-600 rounded py-2 px-4" onclick="this.closest('.fixed').remove()">
+                                Continue Playing
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // Auto-close after 5 seconds
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        modal.parentNode.removeChild(modal);
+                    }
+                }, 5000);
+            }
+            
+            handleTap(e) {
+                if (this.gameData.energy <= 0) {
+                    this.showEnergyWarning();
+                    return;
+                }
+                
+                // Consume energy
+                this.gameData.energy = Math.max(0, this.gameData.energy - 1);
+                
+                // Add coins
+                this.gameData.coins += this.gameData.tapPower;
+                this.gameData.totalCoins += this.gameData.tapPower;
+                this.gameData.totalTaps += 1;
+                
+                // Update daily task progress
+                this.updateDailyTaskProgress('daily_tap_100', 1);
+                
+                // Create floating coin animation
+                this.createFloatingCoin(e);
+                
+                // Update UI
+                this.updateUI();
+                
+                // Auto-save periodically
+                if (Date.now() - this.gameData.lastSaveTime > 10000) { // Save every 10 seconds
+                    this.saveGameData();
+                }
+            }
+            
+            createFloatingCoin(e) {
+                const coin = document.createElement('div');
+                coin.className = 'coin-float absolute pointer-events-none';
+                coin.innerHTML = `
+                    <div class="flex items-center space-x-1 text-yellow-400 font-bold">
+                        <div class="sa-coin">SA</div>
+                        <span>+${this.gameData.tapPower}</span>
+                    </div>
+                `;
+                
+                const rect = e.target.getBoundingClientRect();
+                coin.style.left = (e.clientX || rect.left + rect.width/2) + 'px';
+                coin.style.top = (e.clientY || rect.top + rect.height/2) + 'px';
+                coin.style.position = 'fixed';
+                coin.style.zIndex = '1000';
+                
+                document.body.appendChild(coin);
+                
+                setTimeout(() => {
+                    if (coin.parentNode) {
+                        coin.parentNode.removeChild(coin);
+                    }
+                }, 1000);
+            }
+            
+            showEnergyWarning() {
+                const warning = document.createElement('div');
+                warning.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-6 py-3 rounded-lg z-50 animate-bounce';
+                warning.textContent = 'Not enough energy! Wait for regeneration.';
+                document.body.appendChild(warning);
+                
+                setTimeout(() => {
+                    if (warning.parentNode) {
+                        warning.parentNode.removeChild(warning);
+                    }
+                }, 2000);
+            }
+            
+            updateUI() {
+                // Update coin count
+                const coinCount = document.getElementById('coinCount');
+                if (coinCount) {
+                    coinCount.textContent = this.formatNumber(this.gameData.coins);
+                }
+                
+                // Update energy
+                const energyCount = document.getElementById('energyCount');
+                const maxEnergy = document.getElementById('maxEnergy');
+                const energyBar = document.getElementById('energyBar');
+                
+                if (energyCount) energyCount.textContent = Math.floor(this.gameData.energy);
+                if (maxEnergy) maxEnergy.textContent = this.gameData.maxEnergy;
+                if (energyBar) {
+                    const percentage = (this.gameData.energy / this.gameData.maxEnergy) * 100;
+                    energyBar.style.width = percentage + '%';
+                }
+                
+                // Update tap power
+                const tapPower = document.getElementById('tapPower');
+                if (tapPower) tapPower.textContent = this.gameData.tapPower;
+                
+                // Update coins per hour
+                const coinsPerHour = document.getElementById('coinsPerHour');
+                if (coinsPerHour) coinsPerHour.textContent = this.formatNumber(this.gameData.coinsPerHour);
+                
+                // Update player level
+                const playerLevel = document.getElementById('playerLevel');
+                if (playerLevel) {
+                    const level = this.getCurrentLevel();
+                    playerLevel.textContent = level.name;
+                }
+                
+                // Update stats
+                this.updateStats();
+            }
+            
+            getCurrentLevel() {
+                for (let level of this.levels) {
+                    if (this.gameData.totalCoins >= level.min && this.gameData.totalCoins < level.max) {
+                        return level;
+                    }
+                }
+                return this.levels[this.levels.length - 1];
+            }
+            
+            formatNumber(num) {
+                if (num >= 1000000000) {
+                    return (num / 1000000000).toFixed(1) + 'B';
+                }
+                if (num >= 1000000) {
+                    return (num / 1000000).toFixed(1) + 'M';
+                }
+                if (num >= 1000) {
+                    return (num / 1000).toFixed(1) + 'K';
+                }
+                return Math.floor(num).toString();
+            }
+            
+            startGameLoop() {
+                setInterval(() => {
+                    this.updateEnergy();
+                    this.updateAutoIncome();
+                    this.updateUI();
+                }, 1000);
+                
+                // Auto-save every 30 seconds for registered users
+                if (!this.userData.isGuest) {
+                    setInterval(() => {
+                        this.saveGameData();
+                    }, 30000);
+                }
+            }
+            
+            updateEnergy() {
+                const now = Date.now();
+                const timeDiff = now - this.gameData.lastEnergyUpdate;
+                const energyRegenRate = 1 + (this.gameData.upgrades.energy_regen || 0);
+                const energyToAdd = (timeDiff / 1000) * (energyRegenRate / 10); // Regen rate per second
+                
+                this.gameData.energy = Math.min(this.gameData.maxEnergy, this.gameData.energy + energyToAdd);
+                this.gameData.lastEnergyUpdate = now;
+            }
+            
+            updateAutoIncome() {
+                const autoMinerLevel = this.gameData.upgrades.auto_miner || 0;
+                if (autoMinerLevel > 0) {
+                    const coinsPerSecond = autoMinerLevel * 10 / 3600; // Convert hourly to per second
+                    this.gameData.coins += coinsPerSecond;
+                    this.gameData.totalCoins += coinsPerSecond;
+                    this.gameData.coinsPerHour = autoMinerLevel * 10;
+                }
+            }
+            
+            generateUpgrades() {
+                const upgradesList = document.getElementById('upgradesList');
+                if (!upgradesList) return;
+                
+                upgradesList.innerHTML = '';
+                
+                this.upgradeTypes.forEach(upgrade => {
+                    const cost = this.calculateUpgradeCost(upgrade);
+                    const canAfford = this.gameData.coins >= cost;
+                    
+                    const upgradeCard = document.createElement('div');
+                    upgradeCard.className = `upgrade-card rounded-lg p-4 ${canAfford ? 'cursor-pointer' : 'opacity-50'}`;
+                    upgradeCard.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center">
+                                    <i class="${upgrade.icon} text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">${upgrade.name}</h3>
+                                    <p class="text-sm text-slate-400 dark:text-gray-400">${upgrade.description}</p>
+                                    <div class="text-xs text-slate-500 dark:text-gray-500">Level ${upgrade.level}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="flex items-center space-x-1 font-bold">
+                                    <div class="sa-coin">SA</div>
+                                    <span>${this.formatNumber(cost)}</span>
+                                </div>
+                                <div class="text-xs text-slate-400 dark:text-gray-400">Cost</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (canAfford) {
+                        upgradeCard.addEventListener('click', () => this.buyUpgrade(upgrade));
+                    }
+                    
+                    upgradesList.appendChild(upgradeCard);
+                });
+            }
+            
+            calculateUpgradeCost(upgrade) {
+                return Math.floor(upgrade.baseCost * Math.pow(1.5, upgrade.level));
+            }
+            
+            buyUpgrade(upgrade) {
+                const cost = this.calculateUpgradeCost(upgrade);
+                
+                if (this.gameData.coins < cost) return;
+                
+                this.gameData.coins -= cost;
+                this.gameData.upgrades[upgrade.id] = (this.gameData.upgrades[upgrade.id] || 0) + 1;
+                this.gameData.upgradesPurchased += 1;
+                
+                // Apply upgrade effects
+                this.applyUpgradeEffects(upgrade);
+                
+                // Update upgrade level for display
+                upgrade.level = this.gameData.upgrades[upgrade.id];
+                
+                // Regenerate upgrades list and update UI
+                this.generateUpgrades();
+                this.updateUI();
+                this.saveGameData();
+                
+                this.showSaveIndicator('Upgrade Purchased!');
+            }
+            
+            applyUpgradeEffects(upgrade) {
+                switch(upgrade.id) {
+                    case 'tap_power':
+                        this.gameData.tapPower = 1 + (this.gameData.upgrades.tap_power || 0);
+                        break;
+                    case 'energy_limit':
+                        this.gameData.maxEnergy = 1000 + ((this.gameData.upgrades.energy_limit || 0) * 100);
+                        break;
+                    case 'energy_regen':
+                        // Applied in updateEnergy method
+                        break;
+                    case 'auto_miner':
+                        this.gameData.coinsPerHour = (this.gameData.upgrades.auto_miner || 0) * 10;
+                        break;
+                }
+            }
+            
+            generateSocialTasks() {
+                const socialList = document.getElementById('socialList');
+                const tasksList = document.getElementById('tasksList');
+                
+                if (socialList) {
+                    socialList.innerHTML = '';
+                    this.socialTasks.forEach(task => {
+                        const isCompleted = this.gameData.socialFollows.includes(task.id);
+                        const taskCard = document.createElement('div');
+                        taskCard.className = `social-card rounded-lg p-4 ${isCompleted ? 'reward-claimed' : 'cursor-pointer'}`;
+                        taskCard.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center">
+                                        <i class="${task.icon} text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold">${task.name}</h3>
+                                        <p class="text-sm text-slate-400 dark:text-gray-400">${task.description}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    ${isCompleted ? 
+                                        '<div class="text-green-400 font-bold">✓ Claimed</div>' :
+                                        `<div class="flex items-center space-x-1 font-bold">
+                                            <div class="sa-coin">SA</div>
+                                            <span>+${this.formatNumber(task.reward)}</span>
+                                        </div>`
+                                    }
+                                </div>
+                            </div>
+                        `;
+                        
+                        if (!isCompleted) {
+                            taskCard.addEventListener('click', () => this.completeSocialTask(task));
+                        }
+                        
+                        socialList.appendChild(taskCard);
+                    });
+                }
+                
+                if (tasksList) {
+                    tasksList.innerHTML = '';
+                    this.dailyTasks.forEach(task => {
+                        const isCompleted = this.gameData.completedTasks.includes(task.id);
+                        const progress = this.getDailyTaskProgress(task.id);
+                        const progressPercentage = Math.min(100, (progress / task.target) * 100);
+                        
+                        const taskCard = document.createElement('div');
+                        taskCard.className = `social-card rounded-lg p-4 ${isCompleted ? 'reward-claimed' : ''}`;
+                        taskCard.innerHTML = `
+                            <div class="flex items-center justify-between mb-2">
+                                <div>
+                                    <h3 class="font-bold">${task.name}</h3>
+                                    <p class="text-sm text-slate-400 dark:text-gray-400">${task.description}</p>
+                                </div>
+                                <div class="text-right">
+                                    ${isCompleted ? 
+                                        '<div class="text-green-400 font-bold">✓ Complete</div>' :
+                                        `<div class="flex items-center space-x-1 font-bold">
+                                            <div class="sa-coin">SA</div>
+                                            <span>+${this.formatNumber(task.reward)}</span>
+                                        </div>`
+                                    }
+                                </div>
+                            </div>
+                            <div class="w-full bg-slate-700 dark:bg-gray-700 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: ${progressPercentage}%"></div>
+                            </div>
+                            <div class="text-xs text-slate-400 dark:text-gray-400 mt-1">${progress}/${task.target}</div>
+                        `;
+                        
+                        tasksList.appendChild(taskCard);
+                    });
+                }
+            }
+            
+            completeSocialTask(task) {
+                // Open the social media link in a new tab
+                window.open(task.url, '_blank');
+                
+                // Mark task as completed and give reward
+                this.gameData.socialFollows.push(task.id);
+                this.gameData.coins += task.reward;
+                this.gameData.totalCoins += task.reward;
+                
+                this.generateSocialTasks();
+                this.updateUI();
+                this.saveGameData();
+                
+                this.showSaveIndicator(`+${this.formatNumber(task.reward)} SA Coins!`);
+            }
+            
+            getDailyTaskProgress(taskId) {
+                switch(taskId) {
+                    case 'daily_tap_100':
+                        return Math.min(100, this.gameData.totalTaps % 100);
+                    case 'daily_energy_full':
+                        return this.gameData.energy < this.gameData.maxEnergy * 0.1 ? 1 : 0;
+                    default:
+                        return 0;
+                }
+            }
+            
+            updateDailyTaskProgress(taskId, amount) {
+                // Check if task should be completed
+                const progress = this.getDailyTaskProgress(taskId);
+                const task = this.dailyTasks.find(t => t.id === taskId);
+                
+                if (task && progress >= task.target && !this.gameData.completedTasks.includes(taskId)) {
+                    this.gameData.completedTasks.push(taskId);
+                    this.gameData.coins += task.reward;
+                    this.gameData.totalCoins += task.reward;
+                    this.showSaveIndicator(`Task Complete! +${this.formatNumber(task.reward)} SA Coins!`);
+                    this.generateSocialTasks();
+                }
+            }
+            
+            updateStats() {
+                const elements = {
+                    playerUsername: this.gameData.username || 'Player',
+                    totalTaps: this.formatNumber(this.gameData.totalTaps),
+                    totalCoins: this.formatNumber(this.gameData.totalCoins),
+                    upgradesPurchased: this.gameData.upgradesPurchased,
+                    playTime: this.formatPlayTime(),
+                    totalUsers: Math.floor(Math.random() * 1000) + 500, // Simulated
+                    playerRank: 'Rank: #' + (Math.floor(Math.random() * 100) + 1) // Simulated
+                };
+                
+                Object.entries(elements).forEach(([id, value]) => {
+                    const element = document.getElementById(id);
+                    if (element) element.textContent = value;
+                });
+            }
+            
+            formatPlayTime() {
+                const elapsed = Date.now() - this.gameData.startTime;
+                const hours = Math.floor(elapsed / (1000 * 60 * 60));
+                const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                return `${hours}h ${minutes}m`;
+            }
+            
+            updateLeaderboard() {
+                const leaderboardList = document.getElementById('leaderboardList');
+                if (!leaderboardList) return;
+                
+                // Simulated leaderboard data
+                const leaderboard = [
+                    { name: 'CastleKing', coins: 1500000, level: 'Empire' },
+                    { name: 'TapMaster', coins: 950000, level: 'Kingdom' },
+                    { name: 'Builder99', coins: 750000, level: 'Kingdom' },
+                    { name: this.gameData.username || 'Player', coins: this.gameData.totalCoins, level: this.getCurrentLevel().name },
+                    { name: 'Newbie123', coins: 45000, level: 'Town' }
+                ].sort((a, b) => b.coins - a.coins);
+                
+                leaderboardList.innerHTML = '';
+                leaderboard.forEach((player, index) => {
+                    const isCurrentPlayer = player.name === (this.gameData.username || 'Player');
+                    const rank = index + 1;
+                    
+                    const playerCard = document.createElement('div');
+                    playerCard.className = `bg-slate-800 dark:bg-gray-800 rounded-lg p-4 ${isCurrentPlayer ? 'border-2 border-blue-500' : 'border border-slate-700 dark:border-gray-700'}`;
+                    playerCard.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-full flex items-center justify-center font-bold text-sm">
+                                    ${rank}
+                                </div>
+                                <div>
+                                    <div class="font-bold ${isCurrentPlayer ? 'text-blue-400' : ''}">${player.name}</div>
+                                    <div class="text-sm text-slate-400 dark:text-gray-400">${player.level}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="flex items-center space-x-1 font-bold">
+                                    <div class="sa-coin">SA</div>
+                                    <span>${this.formatNumber(player.coins)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    leaderboardList.appendChild(playerCard);
+                });
+            }
+            
+            switchTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.tab-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Hide all sections
+                const sections = ['tapSection', 'upgradesSection', 'storeSection', 'socialSection', 'statsSection', 'leaderboardSection'];
+                sections.forEach(sectionId => {
+                    const section = document.getElementById(sectionId);
+                    if (section) section.classList.add('hidden');
+                });
+                
+                // Show selected section
+                const targetSection = document.getElementById(tabName + 'Section');
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
+                
+                // Refresh content for specific tabs
+                if (tabName === 'upgrades') {
+                    this.generateUpgrades();
+                } else if (tabName === 'store') {
+                    this.generateStoreItems();
+                } else if (tabName === 'social') {
+                    this.generateSocialTasks();
+                } else if (tabName === 'stats') {
+                    this.updateStats();
+                } else if (tabName === 'leaderboard') {
+                    this.updateLeaderboard();
+                }
+            }
+            
+            changeUsername() {
+                this.showUsernameDialog();
+            }
+            
+            showUsernameDialog() {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-slate-800 dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+                        <h3 class="text-lg font-bold mb-4">Change Username</h3>
+                        <input type="text" id="usernameInput" value="${this.gameData.username || 'Player'}" 
+                               class="w-full p-3 bg-slate-700 dark:bg-gray-700 rounded-lg border border-slate-600 dark:border-gray-600 text-white text-base"
+                               placeholder="Enter new username" maxlength="20">
+                        <div class="flex justify-end space-x-3 mt-4">
+                            <button class="px-4 py-2 text-slate-400 dark:text-gray-400 hover:bg-slate-700 dark:hover:bg-gray-700 rounded" onclick="this.closest('.fixed').remove()">Cancel</button>
+                            <button class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded" onclick="game.saveUsername(); this.closest('.fixed').remove()">Save</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                const input = modal.querySelector('#usernameInput');
+                input.focus();
+                input.select();
+            }
+            
+            saveUsername() {
+                const input = document.getElementById('usernameInput');
+                if (input && input.value.trim()) {
+                    this.gameData.username = input.value.trim();
+                    this.userData.username = input.value.trim();
+                    this.saveGameData();
+                    this.updateStats();
+                    this.updateLeaderboard();
+                    this.showSaveIndicator('Username Updated!');
+                }
+            }
+            
+            loadGameData() {
+                try {
+                    if (this.userData.isGuest) {
+                        console.log('Guest user, skipping load');
+                        return;
+                    }
+
+                    // Load game data based on user ID
+                    const savedData = this.getCookie(`sahilCastleData_${this.userData.userId}`);
+                    if (savedData) {
+                        const parsedData = JSON.parse(decodeURIComponent(savedData));
+                        // Merge saved data with defaults, preserving all game state
+                        this.gameData = { ...this.gameData, ...parsedData };
+                        
+                        // Ensure proper initialization after loading
+                        this.gameData.lastEnergyUpdate = Date.now();
+                        this.gameData.userId = this.userData.userId;
+                        this.gameData.username = this.userData.username;
+                        
+                        // Apply all upgrade effects
+                        Object.keys(this.gameData.upgrades).forEach(upgradeId => {
+                            const upgrade = this.upgradeTypes.find(u => u.id === upgradeId);
+                            if (upgrade) {
+                                upgrade.level = this.gameData.upgrades[upgradeId];
+                                this.applyUpgradeEffects(upgrade);
+                            }
+                        });
+                        
+                        console.log('Game data loaded successfully for user:', this.userData.userId);
+                        this.showSaveIndicator('Welcome back! Progress restored.');
+                    } else {
+                        console.log('No saved data found for user, starting fresh');
+                    }
+                } catch (error) {
+                    console.error('Error loading game data:', error);
+                    this.showSaveIndicator('Could not load saved data, starting fresh');
+                }
+            }
+            
+            saveGameData() {
+                try {
+                    if (this.userData.isGuest) {
+                        this.showSaveIndicator('Register to save your progress!');
+                        return;
+                    }
+
+                    this.gameData.lastSaveTime = Date.now();
+                    
+                    // Add visual saving indicator
+                    const gameContent = document.getElementById('gameContent');
+                    if (gameContent) {
+                        gameContent.classList.add('game-saving');
+                        setTimeout(() => {
+                            gameContent.classList.remove('game-saving');
+                        }, 300);
+                    }
+                    
+                    // Save to cookies with user-specific key
+                    const dataToSave = JSON.stringify(this.gameData);
+                    this.setCookie(`sahilCastleData_${this.userData.userId}`, encodeURIComponent(dataToSave), 365);
+                    
+                    console.log('Game data saved successfully for user:', this.userData.userId);
+                    this.showSaveIndicator('Game Saved');
+                } catch (error) {
+                    console.error('Error saving game data:', error);
+                    this.showSaveIndicator('Save failed');
+                }
+            }
+            
+            setCookie(name, value, days) {
+                try {
+                    const expires = new Date();
+                    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+                    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+                } catch (error) {
+                    console.error('Error setting cookie:', error);
+                }
+            }
+            
+            getCookie(name) {
+                try {
+                    const nameEQ = name + "=";
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i];
+                        while (cookie.charAt(0) === ' ') {
+                            cookie = cookie.substring(1, cookie.length);
+                        }
+                        if (cookie.indexOf(nameEQ) === 0) {
+                            return cookie.substring(nameEQ.length, cookie.length);
+                        }
+                    }
+                    return null;
+                } catch (error) {
+                    console.error('Error getting cookie:', error);
+                    return null;
+                }
+            }
+            
+            handleOfflineProgress() {
+                if (this.userData.isGuest) return;
+                
+                // Calculate offline progress if applicable
+                const now = Date.now();
+                const timeDiff = now - this.gameData.lastSaveTime;
+                
+                if (timeDiff > 60000) { // More than 1 minute offline
+                    const offlineHours = timeDiff / (1000 * 60 * 60);
+                    const offlineCoins = Math.floor(this.gameData.coinsPerHour * offlineHours);
+                    
+                    if (offlineCoins > 0) {
+                        this.gameData.coins += offlineCoins;
+                        this.gameData.totalCoins += offlineCoins;
+                        this.showSaveIndicator(`Welcome back! +${this.formatNumber(offlineCoins)} SA Coins earned offline!`);
+                    }
+                }
+            }
+            
+            showSaveIndicator(message) {
+                const indicator = document.getElementById('saveIndicator');
+                if (indicator) {
+                    indicator.textContent = message;
+                    indicator.style.opacity = '1';
+                    setTimeout(() => {
+                        indicator.style.opacity = '0.5';
+                    }, 3000);
+                }
+            }
+        }
+
+        // Initialize the entry gate system
+        const entryGate = new EntryGate();
+    </script>
+</body>
+</html>
